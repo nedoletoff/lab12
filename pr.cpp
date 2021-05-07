@@ -107,6 +107,6 @@ int Stack::get_size()
 
 void Stack::print()
 {
-	for (int i = 0; i <= top; ++i)
+	for (int i = top; i >= 0; --i)
 		std::cout << data[i] << " - Stack [" << i << "]\n";
 }
