@@ -14,15 +14,16 @@ int main()
 
 	a.push(34);
 	v = a.get_size();
-	a.get(v, &r);
+	a.get(1, &r);
 	std::cout << r << " - Stack a\n";
 
 	std::cout << "Stack a:\n";
 	a.print();
 
 	Stack b(a);
-
-	b.set(1, 99);
+	std::cout << a.get_size() << std::endl;
+	std::cout << b.get_size() << std::endl;
+	b.push( 99);
 	std::cout << "Stack b:\n";
 	b.print();
 
@@ -32,6 +33,7 @@ int main()
 
 	std::cout << "a[0] = 54\n";
 	a.set(0, 54);
+	a.print();
 
 	s = a.get_size();
 	for (int i = s; i >= 0; --i)

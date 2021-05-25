@@ -1,12 +1,20 @@
 #pragma once
 #define N 5
 
+typedef struct node_t
+{
+	int data;
+	struct node_t* next;
+	struct node_t* prev;
+}	node_t;
+
+
 class Stack
 {
 	private:
 		int top;
-		int size;
-		int* data;
+		node_t* head;
+		node_t* tail;
 	public:
 		Stack();
 		Stack(Stack&);

@@ -3,36 +3,78 @@
 
 Stack::Stack()
 {
-	size = N;
 	top = -1;
-	data = new int [size];
+	head = NULL;
+	tail = NULL;
 }
 
 Stack::~Stack()
 {
-	delete [] data;
+	node_t* cur = head;
+	node_t* perv = NULL;
+	for (int i = 0; i <= top; ++i)		
+	{
+		perv = cur;
+		cur = cur->next;
+		delete perv;
+	}
 }
 
 Stack& Stack::operator=(Stack& a)
 {
 	if (&a == this)
 		return *this;
-	delete [] data;
-	top = a.top;
-	size = a.size;
-	data = new int [size];
-	for (int i = 0; i <= top; ++i)
-		data[i] = a.data[i];
+	top = -1;
+	if (a.head == NULL)
+	{
+		head = NULL;
+		tail == NULL;
+	}
+	else 
+	{
+		node_t* cur = a.head;
+		for (int i = 0; i <= a.top; ++i)		
+		{
+			this->push(cur->data);
+			cur = cur->next;
+		}
+	}
 	return *this;
 }
 
 Stack::Stack(Stack& a)
 {
-	size = a.size;
-	top = a.top;
-	data = new int [size];
-	for (int i = 0; i <= top; ++i)
-		data[i] = a.data[i];
+	top = -1;
+	if (a.head == NULL)
+	{
+		head = NULL;
+		tail == NULL;
+	}
+	else 
+	{
+		node_t* cur = a.head;
+		for (int i = 0; i <= a.top; ++i)		
+		{
+
+			this->push(cur->data);
+			cur = cur->next;
+		}
+	}
+}
+
+
+int Stack::get(int index, int* rv)
+{
+	if (index > top || index < 0)
+	{
+		std::cout << "Index out of scope" << std::endl;
+		return 1;
+	}
+	node_t* cur = tail;
+	for (int i = top; i != index; --i)
+		cur = cur->prev;
+	*rv = cur->data;
+	return 0;
 }
 
 int Stack::set(int index, int value)
@@ -42,37 +84,33 @@ int Stack::set(int index, int value)
 		std::cout << "Index out of scope" << std::endl;
 		return 1;
 	}
-	data[index] = value;
-	return 0;
-}
-
-int Stack::get(int index, int* rv)
-{
-	if (index > top || index < 0)
-	{
-		std::cout << "Index out of scope" << std::endl;
-		return 1;
-	}
-	*rv = data[index];
+	node_t* cur = tail;
+	for (int i = top; i != index; --i)
+		cur = cur->prev;
+	cur->data = value;
+	std::cout << cur->data << "\n";
 	return 0;
 }
 
 void Stack::push(int value)
 {
-	if (size == top + 1)
+//	std::cout << "push\n";
+	top++;
+	node_t* cur = tail;
+	node_t* n = new node_t;
+	n->data = value;
+	n->next = NULL;
+	if (head == NULL)
 	{
-//		std::cout << "resize push\n";
-		int* cur = new int [size];
-		for (int i = 0; i <= top; ++i)
-			cur[i] = data[i];
-		delete [] data;
-		size += N;
-		data = new int [size];
-		for (int i = 0; i <= top; ++i)
-			data[i] = cur[i];
-		delete [] cur;
+		n->prev = NULL;
+		head = n;
 	}
-	data[++top] = value;
+	if (tail != NULL) 
+	{
+		cur->next = n;
+		n->prev = cur;
+	}
+	tail = n;
 }
 
 int Stack::pop(int* rv)
@@ -82,21 +120,16 @@ int Stack::pop(int* rv)
 		std::cout << "Stack is empty" << std::endl;
 		return 1;
 	}
-
-	if (size > top + N*2)
-	{
-//		std::cout << "resize pop\n";
-		int* cur = new int [size];
-		for (int i = 0; i <= top; ++i)
-			cur[i] = data[i];
-		delete [] data;
-		size -= N;
-		data = new int [size];
-		for (int i = 0; i <= top; ++i)
-			data[i] = cur[i];
-		delete [] cur;
-	}
-	*rv = data[top--];
+	
+	node_t* n = tail;
+	top--;
+	*rv = n->data;
+	tail = n->prev;
+	n->next = NULL;
+	delete n;
+	if (top == -1)
+		head = NULL;
+	
 	return 0;
 }
 
@@ -107,6 +140,11 @@ int Stack::get_size()
 
 void Stack::print()
 {
+	node_t* cur  = tail;
 	for (int i = top; i >= 0; --i)
-		std::cout << data[i] << " - Stack [" << i << "]\n";
+	{
+		std::cout << "Stack[" << i << "] - " << cur->data << std::endl;
+		cur = cur->prev;
+	}
 }
+
